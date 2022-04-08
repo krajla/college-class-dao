@@ -1,1 +1,3 @@
-# college-class-dao
+# College Class DAO
+
+Masters dissertation project.
