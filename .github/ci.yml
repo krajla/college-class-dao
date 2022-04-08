@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  node_version: "14"
+  solc_version: "0.8.13"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.x"
+          architecture: "x64"
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.node_version }}
+
+      - name: Install npm packages
+        run: npm ci --also=dev
+
+      - name: Install slyther
+        run: |
+          python -m pip install --upgrade pip
+          pip3 install slither-analyzer solc-select
+          solc-select install $solc_version
+          solc-select use $solc_version
+
+      - name: Run hardhat compile
+        run: npx hardhat compile
+
+      - name: Run hardhat test
+        run: npx hardhat test
+
+      - name: Run slither security audit
+        run: slither . --ignore-compile --filter-paths "node_modules" --print human-summary
