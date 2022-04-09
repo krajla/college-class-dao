@@ -2,8 +2,11 @@
 pragma solidity ^0.8.13;
 
 import "hardhat/console.sol";
+import "./openzeppelin/Ownable.sol";
+import "./TestFactory.sol";
+import "./Test.sol";
 
-contract ClassDao {
+contract ClassDao is Ownable {
     // student struct
     struct Student {
         address studentAddress;
@@ -18,18 +21,11 @@ contract ClassDao {
     mapping(address => Student) students;
     address[] private studentIndex;
 
-    /// The function can only be called by the professor
-    error NotProfessor();
+    Test[] public testsGiven;
+    TestFactory private testFactory;
 
     /// Student not present
     error StudentMissing();
-
-    modifier onlyProfessor() {
-        if (msg.sender != professor) {
-            revert NotProfessor();
-        }
-        _;
-    }
 
     modifier studentPresent(address student) {
         if (students[student].studentAddress == address(0)) {
@@ -38,15 +34,16 @@ contract ClassDao {
         _;
     }
 
-    constructor(string memory _className) {
+    constructor(string memory _className, TestFactory _testFactory) {
         professor = msg.sender;
         className = _className;
+        testFactory = _testFactory;
         console.log("Class created: ", className);
     }
 
     function addStudent(address student, string memory name)
         external
-        onlyProfessor
+        onlyOwner
     {
         require(student != address(0), "Student cannot be the zero address");
         require(
@@ -66,7 +63,7 @@ contract ClassDao {
 
     function addGrade(address student, uint grade)
         external
-        onlyProfessor
+        onlyOwner
         studentPresent(student)
     {
         students[student].grades.push(grade);
@@ -75,7 +72,7 @@ contract ClassDao {
 
     function addAttendence(address student)
         external
-        onlyProfessor
+        onlyOwner
         studentPresent(student)
     {
         students[student].attendences++;
@@ -88,5 +85,19 @@ contract ClassDao {
         returns (Student memory)
     {
         return students[student];
+    }
+
+    function startTest(string memory file, uint duration)
+        external
+        onlyOwner
+        returns (Test)
+    {
+        require(bytes(file).length > 0, "Test file cannot be empty");
+
+        Test test = testFactory.createTest(duration);
+        test.startTest(file);
+        console.log("Test started:", address(test));
+
+        return test;
     }
 }

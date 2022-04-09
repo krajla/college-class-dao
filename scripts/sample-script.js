@@ -14,11 +14,16 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const ClassDao = await hre.ethers.getContractFactory("ClassDao");
-  const classDao = await ClassDao.deploy("Criptografie Aplicată");
 
+  const TestFactory = await hre.ethers.getContractFactory("TestFactory");
+  const testFactory = await TestFactory.deploy();
+  await testFactory.deployed();
+
+  const ClassDao = await hre.ethers.getContractFactory("ClassDao");
+  const classDao = await ClassDao.deploy("Criptografie Aplicată", testFactory.address);
   await classDao.deployed();
 
+  console.log("TestFactory deployed to:", testFactory.address);
   console.log("ClassDao deployed to:", classDao.address);
 }
 
