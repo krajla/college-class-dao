@@ -24,6 +24,8 @@ contract ClassDao is Ownable {
     Test[] public testsGiven;
     TestFactory private testFactory;
 
+    event TestStarted(Test Test);
+
     /// Student not present
     error StudentMissing();
 
@@ -61,15 +63,6 @@ contract ClassDao is Ownable {
         console.log("Adding student:", name);
     }
 
-    function addGrade(address student, uint grade)
-        external
-        onlyOwner
-        studentPresent(student)
-    {
-        students[student].grades.push(grade);
-        console.log("Adding grade:", grade);
-    }
-
     function addAttendence(address student)
         external
         onlyOwner
@@ -84,20 +77,34 @@ contract ClassDao is Ownable {
         view
         returns (Student memory)
     {
-        return students[student];
+        Student memory studentInfo = students[student];
+        studentInfo.grades = getStudentTestResults(student);
+
+        return studentInfo;
     }
 
-    function startTest(string memory file, uint duration)
-        external
-        onlyOwner
-        returns (Test)
+    function getStudentTestResults(address student)
+        public
+        view
+        returns (uint[] memory)
     {
+        uint[] memory results = new uint[](testsGiven.length);
+        for (uint i = 0; i < testsGiven.length; i++) {
+            Test test = testsGiven[i];
+            results[i] = test.getGrade(student);
+        }
+
+        return results;
+    }
+
+    function startTest(string memory file, uint duration) external onlyOwner {
         require(bytes(file).length > 0, "Test file cannot be empty");
 
         Test test = testFactory.createTest(duration);
         test.startTest(file);
-        console.log("Test started:", address(test));
+        testsGiven.push(test);
 
-        return test;
+        emit TestStarted(test);
+        console.log("Test started:", address(test));
     }
 }
