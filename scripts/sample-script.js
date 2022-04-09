@@ -16,7 +16,7 @@ async function main() {
   // We get the contract to deploy
 
   const TestFactory = await hre.ethers.getContractFactory("TestFactory");
-  const testFactory = await TestFactory.deploy();
+  const testFactory = await TestFactory.deploy(120000);
   await testFactory.deployed();
 
   const ClassDao = await hre.ethers.getContractFactory("ClassDao");

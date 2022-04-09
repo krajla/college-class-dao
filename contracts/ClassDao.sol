@@ -102,6 +102,7 @@ contract ClassDao is Ownable {
 
         Test test = testFactory.createTest(duration);
         test.startTest(file);
+        test.transferOwnership(professor);
         testsGiven.push(test);
 
         emit TestStarted(test);

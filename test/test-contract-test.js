@@ -5,7 +5,7 @@ describe("Factory", function () {
   it("Should create test and transfer ownership correctly", async function () {
     const TestFactory = await ethers.getContractFactory("TestFactory");
     const Test = await ethers.getContractFactory("Test");
-    const testFactory = await TestFactory.deploy();
+    const testFactory = await TestFactory.deploy(10);
     await testFactory.deployed();
 
     const trx = await testFactory.createTest(1000);
@@ -19,7 +19,7 @@ describe("Factory", function () {
     [owner] = await ethers.getSigners();
     expect(await test.owner()).to.equal(owner.address);
 
-    await expect(testFactory.createTest(1)).to.be.revertedWith("Test duration is too short, minimum 1 minute");
+    await expect(testFactory.createTest(1)).to.be.revertedWith("Test duration is too short");
   });
 });
 
