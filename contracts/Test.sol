@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.7;
 
-import "./openzeppelin/Ownable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Test is Ownable {
     struct Submission {

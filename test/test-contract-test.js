@@ -63,7 +63,8 @@ describe("States with end", function () {
     const trx = await test.startTest(file);
     await trx.wait();
 
-    await delay(1000);
+    await ethers.provider.send("evm_increaseTime", [10]);
+    await ethers.provider.send("evm_mine");
 
     expect(await test.getTestFile()).to.equal(file);
     expect(await test.testEndTime()).to.not.equal(0);
@@ -89,7 +90,9 @@ describe("Grading", function () {
     await trx.wait()
     trx = await test.connect(other).submitAnswers([ethers.utils.formatBytes32String('a'), ethers.utils.formatBytes32String('a')]);
     await trx.wait()
-    await delay(5100);
+
+    await ethers.provider.send("evm_increaseTime", [10]);
+    await ethers.provider.send("evm_mine");
 
     trx = await test.gradeTest([ethers.utils.formatBytes32String('a'), ethers.utils.formatBytes32String('a')]);
     await trx.wait();
@@ -99,6 +102,3 @@ describe("Grading", function () {
   });
 });
 
-function delay(time) {
-  return new Promise(resolve => setTimeout(resolve, time));
-}
