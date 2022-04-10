@@ -2,7 +2,7 @@
 pragma solidity ^0.8.7;
 
 import "hardhat/console.sol";
-import "./openzeppelin/Ownable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "./TestFactory.sol";
 import "./Test.sol";
 
