@@ -7,10 +7,10 @@ flowchart TB
 	A((ClassDAO)) --> C[TestFactory]
   A -- Mints --> B[DiplomaNFT]
   C -- Creates --> D[Test]
-  A -- Gets grades --> D
-  D -- exam link --> E{Student}
-  E -- responses --> D
-  F{Professor} -- correct responses --> D
+  A -. gets grades .-> D
+  D -. exam link .-> E{Student}
+  E -. responses .-> D
+  F{Professor} -. correct responses .-> D
   
   
 ```
