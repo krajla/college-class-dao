@@ -94,8 +94,8 @@ describe("Grading", function () {
     trx = await test.gradeTest([ethers.utils.formatBytes32String('a'), ethers.utils.formatBytes32String('a')]);
     await trx.wait();
 
-    expect(await test.getGrade(owner.address)).to.equal(1);
-    expect(await test.getGrade(other.address)).to.equal(2);
+    expect(await test.getGrade(owner.address)).to.equal(50);
+    expect(await test.getGrade(other.address)).to.equal(100);
   });
 });
 

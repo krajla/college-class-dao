@@ -118,8 +118,8 @@ describe("Start Test", function () {
         const studentInfo = await classDao.getStudent(other.address)
         expect(studentInfo.studentAddress).to.equal(other.address);
         expect(studentInfo.name).to.equal(studentName);
-        expect(studentInfo.grades[0]._hex).to.equal("0x02");
-        expect(studentInfo.attendences._hex).to.equal("0x00");
+        expect(studentInfo.grades[0]).to.equal(100);
+        expect(studentInfo.attendences).to.equal(0);
     });
 });
 

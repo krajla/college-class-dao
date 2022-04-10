@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: Unlicense
-pragma solidity ^0.8.13;
+pragma solidity ^0.8.7;
 
 import "./Test.sol";
 
@@ -17,10 +17,10 @@ contract TestFactory {
         require(duration >= minTestDuration, "Test duration is too short");
 
         Test newTest = new Test(duration);
-        newTest.transferOwnership(msg.sender);
         tests.push(newTest);
         emit TestCreated(newTest);
 
+        newTest.transferOwnership(msg.sender);
         return newTest;
     }
 }

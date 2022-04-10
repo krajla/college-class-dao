@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: Unlicense
-pragma solidity ^0.8.13;
+pragma solidity ^0.8.7;
 
 import "./openzeppelin/Ownable.sol";
 
@@ -118,6 +118,8 @@ contract Test is Ownable {
         hasEnded
         notGraded
     {
+        uint pointsPerQuestion = 100 / correctResponses.length;
+
         // grade the sumbissions of every student
         for (uint i = 0; i < studentIndex.length; i++) {
             address student = studentIndex[i];
@@ -125,7 +127,7 @@ contract Test is Ownable {
             uint grade = 0;
             for (uint j = 0; j < answers.length; j++) {
                 if (answers[j] == correctResponses[j]) {
-                    grade++;
+                    grade += pointsPerQuestion;
                 }
             }
             grades[student] = grade;
