@@ -1,12 +1,13 @@
 const { ethers } = require("hardhat");
 
 async function m() {
+    const [owner, other] = await ethers.getSigners();
+
     const DiplomaNft = await ethers.getContractFactory("DiplomaNft");
-    const diplomaNft = await DiplomaNft.deploy();
+    const diplomaNft = await DiplomaNft.deploy(owner.address);
     await diplomaNft.deployed();
 
     const tokenUri = "http://example.com"
-    const [owner, other] = await ethers.getSigners();
     const trx = await diplomaNft.awardDiploma(other.address, tokenUri);
     await trx.wait();
 
